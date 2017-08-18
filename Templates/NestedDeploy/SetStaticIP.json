@@ -1,0 +1,55 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "virtualNetwork": {
+      "type": "object",
+      "metadata": {
+        "description": "object containing virtual network params"
+      }
+    },
+    "virtualNetworkId": {
+      "type": "string",
+      "metadata": {
+        "description": "ID of existing virtual network"
+      }
+    },
+    "nicName": {
+      "type": "string"
+    },
+    "ipAddress": {
+      "type": "string"
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "name": "[parameters('nicName')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[parameters('virtualNetwork').location]",
+      "apiVersion": "2015-05-01-preview",
+      "dependsOn": [
+      ],
+      "tags": {
+        "displayName": "domainControllerNic"
+      },
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "[parameters('ipAddress')]",
+              "subnet": {
+                "id": "[concat(parameters('virtualNetworkId'),'/subnets/',parameters('virtualNetwork').subnet1Name)]"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {
+  }
+}
