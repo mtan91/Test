@@ -38,7 +38,7 @@
     },
     "assetLocation": {
       "type": "string",
-      "defaultValue": "https://datagofinack01.blob.core.windows.net/resources",
+      "defaultValue": "https://github.com/mtan91/Test",
       "metadata": {
         "description": "Storage Account/GitHub base uri for required files"
       }
