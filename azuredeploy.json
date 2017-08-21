@@ -4,7 +4,7 @@
   "parameters": {
     "envPrefix": {
       "type": "string",
-      "defaultValue": "demo",
+      "defaultValue": "gfd",
       "metadata": {
         "description": "Common prefix for all resource naming"
       }
@@ -45,7 +45,7 @@
     },
     "storageAccountName": {
       "type": "string",
-      "defaultValue": "testgofinack02",
+      "defaultValue": "testgofinack01",
       "metadata": {
         "description": "Storage account name (3-24 chars, can contain only lowercase letters and numbers)"
       }
@@ -66,7 +66,7 @@
     },
     "dcServerName": {
       "type": "string",
-      "defaultValue": "vm-dc01",
+      "defaultValue": "vm-dc02",
       "metadata": {
         "description": "Domain controller VM name"
       }
