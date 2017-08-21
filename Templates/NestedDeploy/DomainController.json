@@ -46,6 +46,7 @@
     },
     "domainName": {
       "type": "string",
+      "defaultValue": "gofinack.com",
       "metadata": {
         "description": "FQDN of the Active Directory"
       }
