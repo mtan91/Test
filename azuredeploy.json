@@ -38,7 +38,7 @@
     },
     "assetLocation": {
       "type": "string",
-      "defaultValue": "https://github.com/mtan91/Test/blob/master",
+      "defaultValue": "https://raw.githubusercontent.com/mtan91/Test/master/",
       "metadata": {
         "description": "Storage Account/GitHub base uri for required files"
       }
