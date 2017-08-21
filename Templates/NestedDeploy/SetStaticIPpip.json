@@ -2,13 +2,13 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "VirtualNetwork": {
+    "virtualNetwork": {
       "type": "object",
       "metadata": {
         "description": "object containing virtual network params"
       }
     },
-    "VirtualNetworkId": {
+    "virtualNetworkId": {
       "type": "string",
       "metadata": {
         "description": "ID of existing virtual network"
@@ -30,12 +30,12 @@
     {
       "name": "[parameters('nicName')]",
       "type": "Microsoft.Network/networkInterfaces",
-      "location": "[parameters('VirtualNetwork').Location]",
+      "location": "[parameters('virtualNetwork').location]",
       "apiVersion": "2015-05-01-preview",
       "dependsOn": [
       ],
       "tags": {
-        "displayName": "DomainControllerNic"
+        "displayName": "domainControllerNic"
       },
       "properties": {
         "ipConfigurations": [
@@ -48,7 +48,7 @@
                 "id": "[parameters('pipID')]"
               },
               "subnet": {
-                "id": "[concat(parameters('VirtualNetworkId'),'/subnets/',parameters('VirtualNetwork').Subnet1Name)]"
+                "id": "[concat(parameters('virtualNetworkId'),'/subnets/',parameters('virtualNetwork').subnet1Name)]"
               }
             }
           }

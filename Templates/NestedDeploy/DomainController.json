@@ -129,7 +129,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "[concat(parameters('envPrefix'),parameters('vmName'), '-osdisk')]",
+            "name": "[concat(parameters('envPrefix'),parameters('vmName'), '-osdisk.vhd')]",
             "vhd": {
               "uri": "[concat(variables('storageBlobUrl'), '/vhds/', parameters('envPrefix'),parameters('vmName'), '-osdisk.vhd')]"
             },

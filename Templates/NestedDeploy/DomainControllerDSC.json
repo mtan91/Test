@@ -26,10 +26,10 @@
         "description": "Common prefix for all resource naming"
       }
     },
-    "assetLocation": {
+    "domainName": {
       "type": "string"
     },
-    "domainName": {
+    "assetLocation": {
       "type": "string"
     },
     "vmName": {
@@ -55,7 +55,7 @@
         "typeHandlerVersion": "2.1",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "modulesUrl": "[concat(parameters('assetLocation'), '/DSC/', 'dsc.zip')]",
+          "modulesUrl": "[concat(parameters('assetLocation'), '/DSC/', 'DSC.zip')]",
           "configurationFunction": "DSCvmConfigs.ps1\\DomainController",
           "properties": {
             "domainName": "[parameters('domainName')]",
