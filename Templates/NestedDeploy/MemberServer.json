@@ -193,7 +193,7 @@
       "apiVersion": "2015-05-01-preview",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "Microsoft.Resources/deployments, '/', [concat('Set',parameters('envPrefix'),parameters('vmName'),'setStaticIP')]"
+        "[concat('Set',parameters('envPrefix'),parameters('vmName'),'setStaticIP')]"
       ],
       "properties": {
         "publisher": "Microsoft.Powershell",
