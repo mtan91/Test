@@ -50,6 +50,22 @@
         "description": "Storage account name (3-24 chars, can contain only lowercase letters and numbers)"
       }
     },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_A1",
+      "allowedValues": [
+        "Standard_A0",
+        "Standard_A1",
+        "Standard_A2",
+        "Standard_A3",
+        "Standard_A4",
+        "Standard_DS2_v2",
+        "Standard_DS3_v2"
+      ],
+      "metadata": {
+        "description": "VM size"
+      }
+    },
     "vnetName": {
       "type": "string",
       "defaultValue": "vnet-172.31.0.0-16",
@@ -64,9 +80,9 @@
         "description": "FQDN of the Active Directory"
       }
     },
-    "dcServerName": {
+    "caServerName": {
       "type": "string",
-      "defaultValue": "vm-dc02",
+      "defaultValue": "vm-ca01",
       "metadata": {
         "description": "Domain controller VM name"
       }
@@ -109,17 +125,17 @@
     "wapPublicDNS": "[concat(parameters('envPrefix'), 'sso')]",
     "webPublicDNS": "[concat(parameters('envPrefix'), 'sso')]",
     "vmConfiguration": {
-      "dc": {
-        "name": "[parameters('dcServerName')]",
-        "size": "Standard_A1"
+      "ca": {
+        "name": "[parameters('caServerName')]",
+        "size": "[parameters('vmSize')]"
       },
       "adfs": {
         "name": "[parameters('adfsServerName')]",
-        "size": "Standard_A1"
+        "size": "[parameters('vmSize')]"
       },
       "wap": {
         "name": "[parameters('wapServerName')]",
-        "size": "Standard_A1"
+        "size": "[parameters('vmSize')]"
       }
     }
   },
@@ -146,7 +162,7 @@
       }
     },
     {
-      "name": "DomainController",
+      "name": "MemberServer",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
@@ -155,7 +171,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('assetLocation'), '/Templates/NestedDeploy/DomainController.json')]",
+          "uri": "[concat(parameters('assetLocation'), '/Templates/NestedDeploy/MemberServer.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -187,35 +203,10 @@
             "value": "[parameters('assetLocation')]"
           },
           "vmName": {
-            "value": "[variables('vmConfiguration').dc.name]"
+            "value": "[variables('vmConfiguration').ca.name]"
           },
           "vmSize": {
-            "value": "[variables('vmConfiguration').dc.size]"
-          }
-        }
-      }
-    },
-    {
-      "name": "UpdateVNetDNS",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "Microsoft.Resources/deployments/NetworkAndStorage",
-        "Microsoft.Resources/deployments/DomainController",
-        "Microsoft.Resources/deployments/DomainControllerDSC"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(parameters('assetLocation'), '/Templates/NestedDeploy/UpdateVNetDNS.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "virtualNetwork": {
-            "value": "[variables('virtualNetwork')]"
-          },
-          "DNSaddress": {
-            "value": "[reference('DomainController').outputs.ipAddress.value]"
+            "value": "[variables('vmConfiguration').ca.size]"
           }
         }
       }
@@ -321,57 +312,18 @@
       }
     },
     {
-      "name": "DomainControllerDSC",
+      "name": "MemberServerCS",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "Microsoft.Resources/deployments/DomainController"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(parameters('assetLocation'), '/Templates/NestedDeploy/DomainControllerDSC.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "virtualNetwork": {
-            "value": "[variables('virtualNetwork')]"
-          },
-          "AdminUsername": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "envPrefix": {
-            "value": "[parameters('envPrefix')]"
-          },
-          "assetLocation": {
-            "value": "[parameters('assetLocation')]"
-          },
-          "domainName": {
-            "value": "[parameters('domainName')]"
-          },
-          "vmName": {
-            "value": "[variables('vmConfiguration').dc.name]"
-          }
-        }
-      }
-    },
-    {
-      "name": "DomainControllerCS",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "Microsoft.Resources/deployments/DomainController",
-        "Microsoft.Resources/deployments/DomainControllerDSC",
+        "Microsoft.Resources/deployments/MemberServer",
         "Microsoft.Resources/deployments/ADFSserverDSC",
         "Microsoft.Resources/deployments/WAPServerDSC"
       ],
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(parameters('assetLocation'), '/Templates/NestedDeploy/DomainControllerCS.json')]",
+          "uri": "[concat(parameters('assetLocation'), '/Templates/NestedDeploy/MemberServerCS.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -397,7 +349,7 @@
             "value": "[parameters('domainName')]"
           },
           "vmName": {
-            "value": "[variables('vmConfiguration').dc.name]"
+            "value": "[variables('vmConfiguration').ca.name]"
           }
         }
       }
@@ -407,7 +359,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "Microsoft.Resources/deployments/DomainControllerDSC",
+        "Microsoft.Resources/deployments/MemberServer",
         "Microsoft.Resources/deployments/ADFSserver",
         "Microsoft.Resources/deployments/UpdateVNetDNS"
       ],
@@ -440,7 +392,7 @@
             "value": "[variables('vmConfiguration').adfs.name]"
           },
           "vmDCName": {
-            "value": "[variables('vmConfiguration').dc.name]"
+            "value": "[variables('vmConfiguration').ca.name]"
           }
         }
       }
@@ -450,7 +402,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "Microsoft.Resources/deployments/DomainControllerCS"
+        "Microsoft.Resources/deployments/MemberServerCS"
       ],
       "properties": {
         "mode": "Incremental",
@@ -484,7 +436,7 @@
             "value": "[variables('vmConfiguration').adfs.name]"
           },
           "vmDCName": {
-            "value": "[variables('vmConfiguration').dc.name]"
+            "value": "[variables('vmConfiguration').ca.name]"
           }
 
         }
@@ -495,7 +447,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "Microsoft.Resources/deployments/DomainControllerDSC",
+        "Microsoft.Resources/deployments/MemberServer",
         "Microsoft.Resources/deployments/WAPServer",
         "Microsoft.Resources/deployments/UpdateVNetDNS"
       ],
@@ -566,7 +518,7 @@
             "value": "[variables('vmConfiguration').wap.name]"
           },
           "vmDCName": {
-            "value": "[variables('vmConfiguration').dc.name]"
+            "value": "[variables('vmConfiguration').ca.name]"
           },
           "vmADFSName": {
             "value": "[variables('vmConfiguration').adfs.name]"
