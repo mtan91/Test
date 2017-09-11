@@ -360,8 +360,7 @@
       "apiVersion": "2015-01-01",
       "dependsOn": [
         "Microsoft.Resources/deployments/MemberServer",
-        "Microsoft.Resources/deployments/ADFSserver",
-        "Microsoft.Resources/deployments/UpdateVNetDNS"
+        "Microsoft.Resources/deployments/ADFSserver"
       ],
       "properties": {
         "mode": "Incremental",
@@ -448,8 +447,7 @@
       "apiVersion": "2015-01-01",
       "dependsOn": [
         "Microsoft.Resources/deployments/MemberServer",
-        "Microsoft.Resources/deployments/WAPServer",
-        "Microsoft.Resources/deployments/UpdateVNetDNS"
+        "Microsoft.Resources/deployments/WAPServer"
       ],
       "properties": {
         "mode": "Incremental",
