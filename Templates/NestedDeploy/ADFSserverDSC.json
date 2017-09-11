@@ -40,6 +40,7 @@
     }
   },
   "variables": {
+    "vmDCName": "vm-dc01.gofinack.com"
   },
   "resources": [
     {
@@ -62,7 +63,7 @@
           "configurationFunction": "DSCvmConfigs.ps1\\ADFSserver",
           "properties": {
             "domainName": "[parameters('domainName')]",
-            "vmDCName": "[concat(parameters('envPrefix'),parameters('vmDCName'))]",
+            "vmDCName": "[variables('vmDCName')]",
             "adminCreds": {
               "userName": "[parameters('adminUsername')]",
               "password": "PrivateSettingsRef:adminPassword"
