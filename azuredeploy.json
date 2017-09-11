@@ -103,6 +103,7 @@
     }
   },
   "variables": {
+    "dnsServerPrivateIp": "10.254.253.4",
     "storageAccount": {
       "name": "[parameters('storageAccountName')]",
       "type": "Standard_RAGRS",
@@ -162,11 +163,35 @@
       }
     },
     {
+      "apiVersion": "2015-01-01",
+      "type": "Microsoft.Resources/deployments",
+      "name": "UpdateVNetDNS",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/NetworkAndStorage"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('assetLocation'),'/Templates/NestedDeploy/UpdateVNetDNS.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "virtualNetwork": {
+            "value": "[variables('virtualNetwork')]"
+          },
+          "DNSaddress": {
+            "value": "[variables('dnsServerPrivateIp')]"
+          }
+        }
+      }
+    },
+    {
       "name": "MemberServer",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "Microsoft.Resources/deployments/NetworkAndStorage"
+        "Microsoft.Resources/deployments/NetworkAndStorage",
+        "Microsoft.Resources/deployments/UpdateVNetDNS"
       ],
       "properties": {
         "mode": "Incremental",
@@ -207,30 +232,6 @@
           },
           "vmSize": {
             "value": "[variables('vmConfiguration').ca.size]"
-          }
-        }
-      }
-    },
-    {
-      "name": "UpdateVNetDNS",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "Microsoft.Resources/deployments/NetworkAndStorage",
-        "Microsoft.Resources/deployments/MemberServer"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(parameters('assetLocation'), '/Templates/NestedDeploy/UpdateVNetDNS.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "virtualNetwork": {
-            "value": "[variables('virtualNetwork')]"
-          },
-          "DNSaddress": {
-            "value": "[reference('MemberServer').outputs.ipAddress.value]"
           }
         }
       }
