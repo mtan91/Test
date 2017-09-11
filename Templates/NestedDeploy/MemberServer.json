@@ -151,7 +151,7 @@
           "diagnosticsProfile": {
             "bootDiagnostics": {
               "enabled": "true",
-              "storageUri": "[variables('storageBlobUrl')]"
+              "storageUri": "[concat('http://',parameters('storageAccount'),'.blob.core.windows.net')]"
             }
           }
         }
