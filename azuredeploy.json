@@ -122,8 +122,8 @@
       "sku": "2012-R2-Datacenter",
       "version": "latest"
     },
-    "wapPublicDNS": "[concat(parameters('envPrefix'), 'sso')]",
-    "webPublicDNS": "[concat(parameters('envPrefix'), 'sso')]",
+    "wapPublicDNS": "[concat(parameters('envPrefix'), 'sts')]",
+    "webPublicDNS": "[concat(parameters('envPrefix'), 'sts')]",
     "vmConfiguration": {
       "ca": {
         "name": "[parameters('caServerName')]",
