@@ -140,22 +140,23 @@
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
-          },
-          "networkProfile": {
-            "networkInterfaces": [
-              {
-                "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('envPrefix'),parameters('vmName'),'nic'))]"
-              }
-            ]
-          },
-          "diagnosticsProfile": {
-            "bootDiagnostics": {
-              "enabled": "true",
-              "storageUri": "[concat('http://',parameters('storageAccount'),'.blob.core.windows.net')]"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('envPrefix'),parameters('vmName'),'nic'))]"
             }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": "true",
+            "storageUri": "[variables('storageBlobUrl')]"
           }
         }
-      }
+      },
+      "resources": []
     },
     {
       "name": "[concat('Set',parameters('envPrefix'),parameters('vmName'),'setStaticIP')]",
