@@ -32,7 +32,7 @@
       "dependsOn": [
       ],
       "tags": {
-        "displayName": "domainControllerNic"
+        "displayName": "memberServerNic"
       },
       "properties": {
         "ipConfigurations": [
