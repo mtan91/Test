@@ -212,11 +212,36 @@
       }
     },
     {
+      "name": "UpdateVNetDNS",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "Microsoft.Resources/deployments/NetworkAndStorage",
+        "Microsoft.Resources/deployments/MemberServer"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(parameters('assetLocation'), '/Templates/NestedDeploy/UpdateVNetDNS.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "virtualNetwork": {
+            "value": "[variables('virtualNetwork')]"
+          },
+          "DNSaddress": {
+            "value": "[reference('MemberServer').outputs.ipAddress.value]"
+          }
+        }
+      }
+    },
+    {
       "name": "ADFSserver",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "Microsoft.Resources/deployments/NetworkAndStorage"
+        "Microsoft.Resources/deployments/NetworkAndStorage",
+        "Microsoft.Resources/deployments/UpdateVNetDNS"
       ],
       "properties": {
         "mode": "Incremental",
@@ -360,7 +385,8 @@
       "apiVersion": "2015-01-01",
       "dependsOn": [
         "Microsoft.Resources/deployments/MemberServer",
-        "Microsoft.Resources/deployments/ADFSserver"
+        "Microsoft.Resources/deployments/ADFSserver",
+        "Microsoft.Resources/deployments/UpdateVNetDNS"
       ],
       "properties": {
         "mode": "Incremental",
@@ -447,7 +473,8 @@
       "apiVersion": "2015-01-01",
       "dependsOn": [
         "Microsoft.Resources/deployments/MemberServer",
-        "Microsoft.Resources/deployments/WAPServer"
+        "Microsoft.Resources/deployments/WAPServer",
+        "Microsoft.Resources/deployments/UpdateVNetDNS"
       ],
       "properties": {
         "mode": "Incremental",
